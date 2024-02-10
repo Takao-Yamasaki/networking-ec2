@@ -27,11 +27,21 @@ resource "aws_security_group" "udemy_networking_sg" {
   }
 }
 
-# インバウンドルール
+# インバウンドルール(ssh)
 resource "aws_security_group_rule" "udemy_networking_ingress" {
   type = "ingress"
   from_port = "22"
   to_port = "22"
+  protocol = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.udemy_networking_sg.id
+}
+
+# インバウンドルール(http)
+resource "aws_security_group_rule" "udemy_networking_http_ingress" {
+  type = "ingress"
+  from_port = "80"
+  to_port = "80"
   protocol = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
   security_group_id = aws_security_group.udemy_networking_sg.id
@@ -51,7 +61,14 @@ resource "aws_security_group_rule" "udemy_networking_egress" {
 resource "aws_ec2_tag" "udemy_networking_ingress_tag" {
   resource_id = aws_security_group_rule.udemy_networking_ingress.security_group_rule_id
   key = "Name"
-  value = "udemy_networking_ingress"
+  value = "udemy_networking_ssh_ingress"
+}
+
+# Name
+resource "aws_ec2_tag" "udemy_networking_http_ingress_tag" {
+  resource_id = aws_security_group_rule.udemy_networking_http_ingress.security_group_rule_id
+  key = "Name"
+  value = "udemy_networking_http_ingress"
 }
 
 # Name
