@@ -67,6 +67,12 @@ resource "aws_instance" "udemy-networking-2-ec2" {
   vpc_security_group_ids = [aws_security_group.udemy_networking_2_sg.id]
   associate_public_ip_address = "true"
 
+  # nginxのインストール
+  user_data = <<EOF
+    #!/bin/bash
+    sudo apt update -y && sudo apt install -y nginx
+  EOF
+
   tags = {
     Name = "udemy-networking-2-ec2"
   }

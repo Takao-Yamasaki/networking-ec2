@@ -109,3 +109,32 @@ resource "aws_route_table_association" "udemy-networking-2-rt-associate" {
   subnet_id = aws_subnet.udemy-networking-2-public1-ap-northeast-1a.id
   route_table_id = aws_route_table.udemy-networking-2-rt.id
 }
+
+# プライベートホストゾーンの作成(2)
+# SOAレコードとNSレコードも同時に作成
+resource "aws_route53_zone" "mydomain-example" {
+  name = "mydomain.example"
+  vpc {
+    vpc_id = aws_vpc.udemy-networking-1-vpc.id
+  }
+}
+
+# DNSレコードの作成(Aレコード)
+resource "aws_route53_record" "myserver" {
+  zone_id = aws_route53_zone.mydomain-example.id
+  name = "myserver.mydomain.example"
+  type = "A"
+  ttl = "300"
+  # udemy-networking-2-ec2のパブリックIPアドレスを登録
+  records = [ aws_instance.udemy-networking-2-ec2.public_ip ]
+}
+
+# DNSレコードの作成(CNAMEレコード)
+resource "aws_route53_record" "myserver2" {
+  zone_id = aws_route53_zone.mydomain-example.id
+  name = "myserver2.mydomain.example"
+  type = "CNAME"
+  ttl = "300"
+  # myserver.mydomain.exampleの別名として登録
+  records = [ "myserver.mydomain.example" ]
+}
