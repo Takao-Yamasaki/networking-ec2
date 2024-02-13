@@ -23,6 +23,17 @@ resource "aws_subnet" "udemy-networking-1-public1-ap-northeast-1a" {
   }
 }
 
+# プライベートサブネット(1) 
+resource "aws_subnet" "udemy-networking-1-private1-ap-northeast-1a" {
+  vpc_id = aws_vpc.udemy-networking-1-vpc.id
+  cidr_block = "10.0.128.0/20"
+  availability_zone = "ap-northeast-1a"
+  
+  tags = {
+    Name = "udemy-networking-1-private1-ap-northeast-1a"
+  }
+}
+
 # インターネットゲートウェイの作成(1)
 resource "aws_internet_gateway" "udemy-networking-1-igw" {
   vpc_id = aws_vpc.udemy-networking-1-vpc.id
